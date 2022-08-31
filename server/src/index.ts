@@ -2,20 +2,21 @@ import { Server } from 'http';
 import { promisify } from 'util';
 import { createServer } from './app';
 import { logger } from './logger';
-import { setup as setupDb } from './db';
+import { setup as setupDb, close as closeDb } from './db';
 
 const PORT = 3000;
 const CONNECTION_STRING = 'postgres://postgres:password@localhost:5432/enpicom';
 
 setupDb(CONNECTION_STRING);
 
-const server: Server = createServer().listen(3000, () => {
+const server: Server = createServer().listen(PORT, () => {
     logger.log(`Server is up and running on ${PORT}`);
 });
 
 const shutdown = async (server: Server) => {
     const closeServer = promisify(server.close).bind(server);
     await closeServer();
+    await closeDb();
 
     process.exit(0);
 };
