@@ -2,8 +2,12 @@ import { Server } from 'http';
 import { promisify } from 'util';
 import { createServer } from './app';
 import { logger } from './logger';
+import { setup as setupDb } from './db';
 
 const PORT = 3000;
+const CONNECTION_STRING = 'postgres://postgres:password@localhost:5432/enpicom';
+
+setupDb(CONNECTION_STRING);
 
 const server: Server = createServer().listen(3000, () => {
     logger.log(`Server is up and running on ${PORT}`);
@@ -28,8 +32,8 @@ process
         logger.warn(`Node.js warning: ${warning}`);
     })
     // Handle application shutdown (posix exit signals)
-    .on('SIGTERM', async () => await shutdown(server))
-    .on('SIGINT', async () => await shutdown(server))
+    .on('SIGTERM', () => shutdown(server))
+    .on('SIGINT', () => shutdown(server))
     .on('exit', (code) => {
-        logger.info(`Server exited with ${code}`);
+        logger.log(`Server exited with ${code}`);
     });
