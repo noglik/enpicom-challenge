@@ -1,5 +1,6 @@
 extension: [ts]
 require: [ts-node/register]
+file: [src/mocha-setup.ts]
 ui: bdd
 reporter: dot
 check-leaks: true

@@ -2,28 +2,37 @@
   "name": "server",
   "version": "0.0.0",
   "description": "Tech challenge server",
-  "main": "index.js",
   "author": "Yaraslau Bukatkin<yaroslaubuk@gmail.com>",
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
+    "start:prod": "node ./build/index.js",
+    "start": "tsnd ./src/index.ts",
     "test": "mocha './src/**/*.test.ts'",
     "lint": "eslint ./src"
   },
   "devDependencies": {
     "@types/chai": "^4.3.3",
+    "@types/chai-as-promised": "^7.1.5",
+    "@types/chai-http": "^4.2.0",
+    "@types/express": "^4.17.13",
     "@types/mocha": "^9.1.1",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "chai-http": "^4.3.0",
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-prettier": "^4.2.1",
     "mocha": "^10.0.0",
     "prettier": "^2.7.1",
-    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.8.2"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
   }
 }
