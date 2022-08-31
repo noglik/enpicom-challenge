@@ -1,1 +1,1 @@
-console.log('running');
+export const add = (x: number, y: number) => x + y;
