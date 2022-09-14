@@ -3,5 +3,5 @@ CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
 
 CREATE TABLE IF NOT EXISTS dna(
   id SERIAL PRIMARY KEY,
-  sequence VARCHAR(255),
+  sequence VARCHAR(255)
 );

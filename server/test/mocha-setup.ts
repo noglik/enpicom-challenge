@@ -17,6 +17,8 @@ declare module 'mocha' {
     }
 }
 
+// TODO: mock logger
+
 const DB_NAME = 'enpicom';
 const DB_PASSWORD = 'password';
 const PORT = 5432;
@@ -32,10 +34,10 @@ before(async function () {
     const host = this.container.getHost();
     const port = this.container.getMappedPort(PORT);
 
-    setupDb(`postgres://postgres:${DB_PASSWORD}@${host}:${port}/${DB_NAME}`);
+    await setupDb(`postgres://postgres:${DB_PASSWORD}@${host}:${port}/${DB_NAME}`);
 
     this.serverInstance = createServer().listen();
-    const address = this.serverInstance.address as unknown as AddressInfo;
+    const address = this.serverInstance.address() as AddressInfo;
     const localUrl = `http://localhost:${address.port}`;
     this.server = chai.request(localUrl);
 });

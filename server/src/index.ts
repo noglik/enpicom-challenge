@@ -7,11 +7,15 @@ import { setup as setupDb, close as closeDb } from './db';
 const PORT = 3000;
 const CONNECTION_STRING = 'postgres://postgres:password@localhost:5432/enpicom';
 
-setupDb(CONNECTION_STRING);
+let server: Server;
 
-const server: Server = createServer().listen(PORT, () => {
-    logger.log(`Server is up and running on ${PORT}`);
-});
+(async () => {
+    await setupDb(CONNECTION_STRING);
+
+    server = createServer().listen(PORT, () => {
+        logger.log(`Server is up and running on ${PORT}`);
+    });
+})();
 
 const shutdown = async (server: Server) => {
     const closeServer = promisify(server.close).bind(server);

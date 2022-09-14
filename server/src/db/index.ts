@@ -4,12 +4,18 @@ import { logger } from '../logger';
 
 export let db = null as unknown as Pool;
 
-export const setup = (connectionString: string) => {
+export const setup = async (connectionString: string) => {
     logger.log('Connecting to DB...');
-    db = new Pool({ connectionString });
+    try {
+        db = new Pool({ connectionString, idleTimeoutMillis: 0, connectionTimeoutMillis: 0 });
 
-    logger.log('Running migrations...');
-    migrate({ client: db }, 'src/db/migrations');
+        logger.log('Running migrations...');
+        const migrations = await migrate({ client: db }, 'src/db/migrations');
+        logger.info(`Migrations executed ${migrations}`);
+    } catch (err) {
+        logger.error({ err }, 'Unexpected DB setup error');
+        throw err;
+    }
 
     db.on('error', (err) => {
         logger.error(`Unexpected DB error: ${err}`);
