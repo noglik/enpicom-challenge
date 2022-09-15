@@ -26,13 +26,18 @@ dnaRouter.post('/', async (req, res) => {
 
 // query dna
 dnaRouter.get('/', async (req, res) => {
-    const { sequence } = req.query;
+    const { sequence, levenshtein } = req.query;
+
+    const query = sql`SELECT id, sequence FROM dna `;
+    if (levenshtein) {
+        query.append(sql`WHERE levenshtein(sequence, ${sequence})=${levenshtein} `);
+    } else {
+        query.append(sql`WHERE sequence LIKE ${`%${sequence}%`}`);
+    }
+    query.append(sql`ORDER BY sequence`);
+
     try {
-        const queryResult = await db.query(
-            sql`SELECT id, sequence FROM dna
-                WHERE sequence LIKE ${`%${sequence}%`}
-                ORDER BY sequence`
-        );
+        const queryResult = await db.query(query);
         return res.json(queryResult.rows);
     } catch (err) {
         logger.error({ err, sequence }, QUERY_ERROR_MESSAGE);

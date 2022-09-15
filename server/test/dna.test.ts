@@ -40,5 +40,29 @@ describe('Dna router', function () {
             expect(res.status).to.be.eql(200);
             expect(res.body).to.be.eql([]);
         });
+
+        describe('with Levenshtein distance', function () {
+            it('should query sequnce with levenshtein distance 2', async function () {
+                const { rows } = await db.query(
+                    sql`INSERT INTO dna(sequence) VALUES('GACTACTG') RETURNING id, sequence`
+                );
+
+                const res = await this.server
+                    .get('/api/dna')
+                    .query({ sequence: 'GACTACCC', levenshtein: 2 });
+
+                expect(res.status).to.be.eql(200);
+                expect(res.body).to.be.eql(rows);
+            });
+
+            it('should return empty array if there are no matches for given distance', async function () {
+                const res = await this.server
+                    .get('/api/dna')
+                    .query({ sequence: 'CAGTA', levenstein: 1 });
+
+                expect(res.status).to.be.eql(200);
+                expect(res.body).to.be.eql([]);
+            });
+        });
     });
 });
