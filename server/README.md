@@ -8,6 +8,8 @@ Prerequisites:
 * yarn v1.22.19
 * docker v20.10.17
 
+Create `.env` file and copy content from `.env.example`.
+
 To run server in development mode:
 ```
 yarn start
