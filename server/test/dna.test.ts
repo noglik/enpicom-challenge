@@ -1,9 +1,11 @@
 import { expect } from 'chai';
 import sql from 'sql-template-strings';
 import { db } from '../src/db';
-import { INCORRECT_LENGTH } from '../src/middleware';
+import { INCORRECT_LENGTH, REGEX_FAIL, NOT_A_NUMBER } from '../src/middleware';
 
 describe('Dna router', function () {
+    // table can be cleaned in afterEach, but since there are no a lot of tests it's fine
+
     describe('POST /api/dna save', function () {
         it('should create dna record in db on', async function () {
             const sequence = 'ACTG';
@@ -42,6 +44,13 @@ describe('Dna router', function () {
             expect(res.body).to.be.eql([]);
         });
 
+        it('should return return 400 if sequence has incorrect value("ABRACADABRA")', async function () {
+            const res = await this.server.get('/api/dna').query({ sequence: 'ABRACADABRA' });
+
+            expect(res.status).to.be.eql(400);
+            expect(res.body).to.be.eql({ message: REGEX_FAIL });
+        });
+
         describe('with Levenshtein distance', function () {
             it('should query sequnce with levenshtein distance 2', async function () {
                 const { rows } = await db.query(
@@ -63,6 +72,15 @@ describe('Dna router', function () {
 
                 expect(res.status).to.be.eql(200);
                 expect(res.body).to.be.eql([]);
+            });
+
+            it('should return return 400 if levenshtein distance is not a number', async function () {
+                const res = await this.server
+                    .get('/api/dna')
+                    .query({ sequence: 'CAGTA', levenstein: 'not_a_number' });
+
+                expect(res.status).to.be.eql(400);
+                expect(res.body).to.be.eql({ message: NOT_A_NUMBER });
             });
         });
     });
