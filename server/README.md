@@ -1,7 +1,5 @@
 # DNA server
 
-## Prerequisites
-
 ## Development
 Prerequisites:
 * node v18.8.0
@@ -38,7 +36,7 @@ yarn test:func
 
 ## Env variables
 
-|Variable          |Information                           |
+|Name              |Description                           |
 |------------------|--------------------------------------|
 |PORT              |Port that application will listen on. |
 |CONNECTION_STRING |Database connection string.           |
