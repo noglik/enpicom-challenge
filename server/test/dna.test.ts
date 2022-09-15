@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import sql from 'sql-template-strings';
 import { db } from '../src/db';
+import { INCORRECT_LENGTH } from '../src/middleware';
 
 describe('Dna router', function () {
     describe('POST /api/dna save', function () {
@@ -13,12 +14,12 @@ describe('Dna router', function () {
             expect(res.body.id).to.be.a('number');
         });
 
-        it('should return 500 if sequence is too long', async function () {
+        it('should return 500 if sequence is too long(256 chars)', async function () {
             const sequence = 'ACTG'.repeat(64); // 256 length string
             const res = await this.server.post('/api/dna').send({ sequence });
 
-            expect(res.status).to.be.eql(500);
-            expect(res.body).to.be.eql({ message: 'Something went wrong' });
+            expect(res.status).to.be.eql(400);
+            expect(res.body).to.be.eql({ message: INCORRECT_LENGTH });
         });
     });
 
