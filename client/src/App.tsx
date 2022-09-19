@@ -5,22 +5,18 @@ const App = () => {
   const [error, setError] = useState<Error|undefined>();
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent) => {
-    setLoading(true);
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const target = e.target as typeof e.target & {
-      sequence: {value: string};
-    };
-    const sequence = target.sequence.value;
+    setLoading(true);
+    setError(undefined);
+    const formData = new FormData(e.currentTarget);
 
     fetch(`/api/dna`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        sequence,
-      })
+      body: JSON.stringify(Object.fromEntries(formData)),
     })
     .then(async (res) => {
       const data = await res.json();
@@ -30,21 +26,21 @@ const App = () => {
         return Promise.reject(Error(errorMessage));
       }
 
-      setError(undefined);
+      setLoading(false);
       return Promise.resolve();
     })
     .catch((err: Error) => {
+      setLoading(false);
       setError(err)
     })
-    setLoading(false);
   } 
 
   return (
     <div className="App">
       <div id="save-dna">
         <h4>Add DNA string</h4>
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <input type="text" name="sequence" placeholder="DNA string*" className="inp" />
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="sequence" placeholder="DNA string*" className="inp" disabled={loading} />
           <button type="submit" className="btn" disabled={loading}>Save</button>
         </form>
         {error ? <p className="err">{error.message}</p> : null}
