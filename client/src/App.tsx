@@ -40,7 +40,7 @@ const App = () => {
       <div id="save-dna">
         <h4>Add DNA string</h4>
         <form onSubmit={handleSubmit}>
-          <input type="text" name="sequence" placeholder="DNA string*" className="inp" disabled={loading} />
+          <input type="text" name="sequence" placeholder="DNA string*(ACTG)" required className="inp" disabled={loading} pattern="^[ACTG]{1,255}$" />
           <button type="submit" className="btn" disabled={loading}>Save</button>
         </form>
         {error ? <p className="err">{error.message}</p> : null}

@@ -12,13 +12,18 @@
 .inp {
   border: none;
   padding: 10px;
-  border-radius: 3px;
+  border-radius: 3px 0px 0px 3px;
 }
 
 .btn {
   padding: 10px;
   border: none;
-  border-radius: 3px;
+  border-radius: 0px 3px 3px 0px;
+  background-color: #b6ee85;
+}
+
+.btn:disabled {
+  background-color: grey;
 }
 
 .err {

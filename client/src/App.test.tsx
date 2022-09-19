@@ -2,15 +2,22 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from './App';
 
+// Basically several tests are written in one, to imitate users behavior
+// https://kentcdodds.com/blog/write-fewer-longer-tests
 test('Add DNA string', async () => {
   render(<App />);
-
-  // type failing sequence
   const dnaInput = screen.getByPlaceholderText(/dna string*/i);
+  const saveButton = screen.getByText(/save/i);
+
+  // type invalid sequence
+  fireEvent.change(dnaInput, { target: { value: 'not_valid_dna_sequence' } });
+
+  expect(dnaInput).toBeInvalid();
+
+  // type request failing sequence
   fireEvent.change(dnaInput, { target: { value: 'TACG' } });
 
   // add
-  const saveButton = screen.getByText(/save/i);
   fireEvent.click(saveButton);
 
   // check button disabled
