@@ -19,7 +19,7 @@ Please refer to server [README](./server/README.md) for info.
 
 ### Client
 
-Please refer to server [README](./server/README.md) for info.
+Please refer to client [README](./client/README.md) for info.
 
 ### Open Question
 
