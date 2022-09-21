@@ -8,14 +8,14 @@ test('SearchDna', async () => {
   render(<SearchDna />);
   const dnaInput = screen.getByPlaceholderText(/dna string*/i);
   const levenshteinInput = screen.getByPlaceholderText(/levenshtein/i);
-  const saveButton = screen.getByText(/save/i);
+  const searchButton = screen.getByRole('button', { name: "Search" });
 
   // error response
   fireEvent.change(dnaInput, { target: { value: 'TACGG' } });
 
-  fireEvent.click(saveButton);
+  fireEvent.click(searchButton);
 
-  await waitForFetch([dnaInput, levenshteinInput, saveButton]);
+  await waitForFetch([dnaInput, levenshteinInput, searchButton]);
 
   const errorMessage = screen.getByText(/not valid!/i);
   expect(errorMessage).toBeVisible();
@@ -23,13 +23,13 @@ test('SearchDna', async () => {
   // no records response
   fireEvent.change(dnaInput, { target: { value: 'TACG' } });
 
-  fireEvent.click(saveButton);
+  fireEvent.click(searchButton);
 
-  await waitFor(() => disabilityExpectation([dnaInput, levenshteinInput, saveButton], true));
+  await waitFor(() => disabilityExpectation([dnaInput, levenshteinInput, searchButton], true));
 
   expect(errorMessage).not.toBeVisible();
 
-  await waitFor(() => disabilityExpectation([dnaInput, levenshteinInput, saveButton], false));
+  await waitFor(() => disabilityExpectation([dnaInput, levenshteinInput, searchButton], false));
 
   const emptyMessage = screen.getByText(NO_RECORDS_TEXT);
   expect(emptyMessage).toBeVisible();
@@ -37,9 +37,9 @@ test('SearchDna', async () => {
   // success sequence
   fireEvent.change(dnaInput, { target: { value: 'ACTG' } });
 
-  fireEvent.click(saveButton);
+  fireEvent.click(searchButton);
 
-  await waitForFetch([dnaInput, levenshteinInput, saveButton]);
+  await waitForFetch([dnaInput, levenshteinInput, searchButton]);
 
   expect(emptyMessage).not.toBeVisible();
   const table = screen.getByRole('table');
@@ -52,9 +52,9 @@ test('SearchDna', async () => {
   fireEvent.change(dnaInput, { target: { value: 'ACTG' } });
   fireEvent.change(levenshteinInput, { target: { value: 2 } });
 
-  fireEvent.click(saveButton);
+  fireEvent.click(searchButton);
 
-  await waitForFetch([dnaInput, levenshteinInput, saveButton]);
+  await waitForFetch([dnaInput, levenshteinInput, searchButton]);
 
   expect(within(table).getByText(records[0].id)).toBeVisible();
   expect(within(table).getByText(records[0].sequence)).toBeVisible();
