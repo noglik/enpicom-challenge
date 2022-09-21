@@ -41,3 +41,5 @@ Security improvements:
 4. Replication for Postgres, to navigate write queries to leader and read queries to followers.
 
 5. Introduce autoscaling for application server. This will keep the right amount of instances for current user count (low/high times).
+
+6. Improve validation, logging and development experience in general.
