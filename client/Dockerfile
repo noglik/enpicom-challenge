@@ -15,7 +15,7 @@ RUN yarn test --watchAll=false # linting would also go here
 RUN yarn build
 
 # Delivery step(builded client)
-FROM alpine:3.16.2 as build
+FROM alpine:3.16.2 as delivery
 
 WORKDIR /app
 
